@@ -21,6 +21,32 @@ ADAPTER = BotFrameworkAdapter(
 )
 
 # ---------------------------------------------------------------------------
+# Markdown post-processor
+# ---------------------------------------------------------------------------
+
+def format_message(text: str) -> str:
+    """Convert fenced code blocks to indented code for Teams plain-text messages."""
+    parts = re.split(r'(```[\w]*\n.*?```)', text, flags=re.DOTALL)
+    result = []
+    for part in parts:
+        if part.startswith("```"):
+            inner = re.match(r'```[\w]*\n(.*?)```', part, re.DOTALL)
+            if inner:
+                code = inner.group(1)
+                lines = code.split("\n")
+                if lines and re.match(r'^[a-z]+\s*$', lines[0].strip()):
+                    lines = lines[1:]
+                while lines and not lines[-1].strip():
+                    lines.pop()
+                result.append("\n".join("    " + line for line in lines))
+            else:
+                result.append(part)
+        else:
+            result.append(part)
+    return "".join(result)
+
+
+# ---------------------------------------------------------------------------
 # Repo management (identical to slack-bot)
 # ---------------------------------------------------------------------------
 
@@ -65,6 +91,8 @@ _in_flight: set[str] = set()
 # ---------------------------------------------------------------------------
 
 async def _send(conversation_ref: ConversationReference, text: str) -> None:
+    text = format_message(text)
+
     async def _callback(context: TurnContext) -> None:
         await context.send_activity(MessageFactory.text(text))
 
