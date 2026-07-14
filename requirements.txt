@@ -1,0 +1,4 @@
+botbuilder-integration-aiohttp>=4.15.0
+httpx
+python-dotenv
+aiohttp
