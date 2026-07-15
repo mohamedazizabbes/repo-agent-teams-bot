@@ -7,7 +7,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 from aiohttp import web
-from botbuilder.integration.aiohttp import BotFrameworkAdapter
+from botbuilder.integration.aiohttp import CloudAdapter, ConfigurationBotFrameworkAuthentication
 from botbuilder.core import ConversationReference, MessageFactory, TurnContext
 from botbuilder.schema import Activity, ActivityTypes
 
@@ -15,10 +15,12 @@ from rag_client import ask_rag, ingest_repo, ingest_status
 
 load_dotenv()
 
-ADAPTER = BotFrameworkAdapter(
-    os.environ["MICROSOFT_APP_ID"],
-    os.environ["MICROSOFT_APP_PASSWORD"],
-)
+config = ConfigurationBotFrameworkAuthentication({
+    "MicrosoftAppType": "MultiTenant",
+    "MicrosoftAppId": os.environ["MICROSOFT_APP_ID"],
+    "MicrosoftAppPassword": os.environ["MICROSOFT_APP_PASSWORD"],
+})
+ADAPTER = CloudAdapter(config)
 
 # ---------------------------------------------------------------------------
 # Markdown post-processor
