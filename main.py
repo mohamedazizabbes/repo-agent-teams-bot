@@ -15,6 +15,13 @@ from rag_client import ask_rag, ingest_repo, ingest_status
 
 load_dotenv()
 
+_required = ["MICROSOFT_APP_ID", "MICROSOFT_APP_PASSWORD", "RAG_BACKEND_URL"]
+_missing = [v for v in _required if not os.environ.get(v)]
+if _missing:
+    print(f"ERROR: Missing env vars: {', '.join(_missing)}")
+    print("Set them in Render → Settings → Environment and redeploy.")
+    raise SystemExit(1)
+
 config = ConfigurationBotFrameworkAuthentication({
     "MicrosoftAppType": "MultiTenant",
     "MicrosoftAppId": os.environ["MICROSOFT_APP_ID"],
