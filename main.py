@@ -21,11 +21,14 @@ if _missing:
     print(f"ERROR: Missing env vars: {', '.join(_missing)}")
     raise SystemExit(1)
 
-os.environ["MicrosoftAppType"] = "MultiTenant"
-os.environ["MicrosoftAppId"] = os.environ["MICROSOFT_APP_ID"]
-os.environ["MicrosoftAppPassword"] = os.environ["MICROSOFT_APP_PASSWORD"]
+from botbuilder.core.configuration import Configuration
 
-ADAPTER = CloudAdapter(ConfigurationBotFrameworkAuthentication())
+_config = Configuration({
+    "MicrosoftAppType": "MultiTenant",
+    "MicrosoftAppId": os.environ["MICROSOFT_APP_ID"],
+    "MicrosoftAppPassword": os.environ["MICROSOFT_APP_PASSWORD"],
+})
+ADAPTER = CloudAdapter(ConfigurationBotFrameworkAuthentication(_config))
 
 # ---------------------------------------------------------------------------
 # Markdown post-processor
