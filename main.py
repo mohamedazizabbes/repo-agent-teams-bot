@@ -8,8 +8,8 @@ from pathlib import Path
 from dotenv import load_dotenv
 from aiohttp import web
 from botbuilder.integration.aiohttp import CloudAdapter, ConfigurationBotFrameworkAuthentication
-from botbuilder.core import ConversationReference, MessageFactory, TurnContext
-from botbuilder.schema import Activity, ActivityTypes
+from botbuilder.core import MessageFactory, TurnContext
+from botbuilder.schema import Activity, ActivityTypes, ConversationReference
 
 from rag_client import ask_rag, ingest_repo, ingest_status
 
